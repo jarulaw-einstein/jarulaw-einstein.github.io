@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow">
 <title>Connect to Einstein</title>
@@ -15,7 +15,8 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--green); font-family: Montserrat, -apple-system, system-ui, sans-serif;
-         min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px; }
+         min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+         padding: calc(32px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left)); }
   @media (prefers-color-scheme: dark) { body { color: #eef3ee; } }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; max-width: 460px; width: 100%;
           padding: 28px 24px; box-shadow: 0 10px 30px rgba(4,44,24,.08); animation: up .35s ease-out; }
@@ -38,6 +39,8 @@
   pre { white-space: pre-wrap; word-break: break-all; background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
         padding: 10px; font-size: 12px; }
   .small { font-size: 13px; }
+  footer { max-width: 460px; width: 100%; margin-top: 16px; font-size: 13px; color: var(--gray); display: flex; gap: 16px; justify-content: center; }
+  footer a { color: inherit; }
   .bad h1 { color: #b3261e; }
   @media (prefers-color-scheme: dark) { .bad h1 { color: #ff8a80; } }
 </style>
@@ -47,6 +50,7 @@
   <div class="brand"><img src="logo.png" alt=""><div><b>Einstein</b><span>Javaherian &amp; Ruszecki</span></div></div>
   <div id="content"><p>Loading…</p></div>
 </main>
+<footer><a href="../">Einstein home</a><a href="../accessibility/">Accessibility</a></footer>
 <script>
 (function () {
   var TO = "einstein@jarulaw.com";
