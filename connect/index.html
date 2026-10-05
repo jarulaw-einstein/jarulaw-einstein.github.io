@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Connect to Einstein</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #042C18; --lime: #BDD73C; --mint: #D0ECDE; --gray: #5f6266; --bg: #f6f8f5; --card: #fff; --line: #e3e8e2; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #08130d; --card: #0f1f16; --line: #1f3428; --gray: #a9b3ad; --mint: #16301f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--green); font-family: Montserrat, -apple-system, system-ui, sans-serif;
+         min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px; }
+  @media (prefers-color-scheme: dark) { body { color: #eef3ee; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; max-width: 460px; width: 100%;
+          padding: 28px 24px; box-shadow: 0 10px 30px rgba(4,44,24,.08); animation: up .35s ease-out; }
+  @keyframes up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .brand img { width: 44px; height: 44px; border-radius: 12px; }
+  .brand b { font-size: 18px; font-weight: 800; }
+  .brand span { display: block; font-size: 12px; color: var(--gray); font-weight: 500; }
+  .step { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray); }
+  h1 { font-size: 24px; line-height: 1.25; margin: 6px 0 10px; font-weight: 800; }
+  p { font-size: 16px; line-height: 1.5; color: var(--gray); margin: 0 0 14px; }
+  .btn { display: block; width: 100%; text-align: center; background: var(--green); color: #fff; text-decoration: none;
+         font-weight: 700; font-size: 18px; padding: 16px; border-radius: 14px; border: 0; cursor: pointer; margin: 18px 0 10px; }
+  @media (prefers-color-scheme: dark) { .btn { background: var(--lime); color: var(--green); } }
+  .btn:active { transform: scale(.99); }
+  .note { background: var(--mint); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.45; }
+  .note b { color: inherit; }
+  details { margin-top: 14px; font-size: 14px; color: var(--gray); }
+  summary { cursor: pointer; font-weight: 700; }
+  pre { white-space: pre-wrap; word-break: break-all; background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+        padding: 10px; font-size: 12px; }
+  .small { font-size: 13px; }
+  .bad h1 { color: #b3261e; }
+  @media (prefers-color-scheme: dark) { .bad h1 { color: #ff8a80; } }
+</style>
+</head>
+<body>
+<main class="card" id="card">
+  <div class="brand"><img src="logo.png" alt=""><div><b>Einstein</b><span>Javaherian &amp; Ruszecki</span></div></div>
+  <div id="content"><p>Loading…</p></div>
+</main>
+<script>
+(function () {
+  var TO = "einstein@jarulaw.com";
+  var q = new URLSearchParams(location.search);
+  var code = q.get("code"), state = q.get("state"), err = q.get("error");
+  // keep the one-time code out of the browser history
+  try { history.replaceState(null, "", location.pathname); } catch (e) {}
+  var box = document.getElementById("content");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+
+  if (err) {
+    document.getElementById("card").className = "card bad";
+    box.innerHTML = "<div class='step'>Not connected</div><h1>Nothing was connected</h1>" +
+      "<p>" + (err === "access_denied" ? "You tapped Cancel on Google's screen." : "Google said: " + esc(err) + ".") + "</p>" +
+      "<div class='note'>To try again, text Einstein: <b>connect my Google</b></div>";
+    return;
+  }
+  if (!code || !state || !/^[A-Za-z0-9_-]{10,80}$/.test(state)) {
+    box.innerHTML = "<div class='step'>Einstein</div><h1>This page finishes connecting your Google account</h1>" +
+      "<p>Open it from the link Einstein texted you. To get a new link, text Einstein: <b>connect my Google</b></p>";
+    return;
+  }
+  var body = "Please connect my Google account.\n\n" +
+             "(Einstein reads the line below. Don't change it.)\n" +
+             "EINSTEIN-CONNECT " + state + " " + code + "\n";
+  var href = "mailto:" + TO + "?subject=" + encodeURIComponent("Connect my Google account") +
+             "&body=" + encodeURIComponent(body);
+  box.innerHTML =
+    "<div class='step'>Step 3 of 3 · Last step</div>" +
+    "<h1>Tap the button, then tap Send</h1>" +
+    "<p>An email to Einstein opens with everything filled in. Just send it. About a minute later Einstein texts you <b>Connected ✅</b>.</p>" +
+    "<a class='btn' id='go' href='" + href + "'>Open the email</a>" +
+    "<div class='note'><b>Send it from your work email</b> (your @jarulaw.com account). Einstein only accepts it from your own address, " +
+    "and the link only works once, for the next 10 minutes.</div>" +
+    "<details><summary>No email opened?</summary>" +
+    "<p class='small'>Send an email from your @jarulaw.com account to <b>" + TO + "</b> with this exact line in it:</p>" +
+    "<pre id='line'>EINSTEIN-CONNECT " + esc(state) + " " + esc(code) + "</pre>" +
+    "<button class='btn' id='copy' style='font-size:15px;padding:12px;margin-top:4px'>Copy the line</button></details>";
+  var c = document.getElementById("copy");
+  c.onclick = function () {
+    var t = document.getElementById("line").textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(
+      function () { c.textContent = "Copied"; }, function () { c.textContent = "Select the line above and copy it"; });
+  };
+})();
+</script>
+</body>
+</html>
