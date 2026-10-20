@@ -74,10 +74,10 @@
     return;
   }
   var body = "Please connect my Google account.\n\n" +
-             "(Einstein reads the line below. Don't change it.)\n" +
+             "(Einstein reads the line below. Please leave it as is.)\n" +
              "EINSTEIN-CONNECT " + state + " " + code + "\n";
   var href = "mailto:" + TO + "?subject=" + encodeURIComponent("Connect my Google account") +
-             "&body=" + encodeURIComponent(body);
+             "&body=" + encodeURIComponent(body).replace(/'/g, "%27");
   box.innerHTML =
     "<div class='step'>Step 3 of 3 · Last step</div>" +
     "<h1>Tap the button, then tap Send</h1>" +
